@@ -17,359 +17,384 @@
     href="https://cdn.jsdelivr.net/npm/odometer@0.4.8/themes/odometer-theme-default.css"
     rel="stylesheet"
   />
-  <style>
-    :root {
-      --feather-green: rgb(88, 204, 2);
-      --mask-green: rgb(137, 226, 25);
-      --eel: rgb(75, 75, 75);
-      --snow: rgb(255, 255, 255);
-      --dark-background: #1b1a24;
-      --card-background-start: #252434;
-      --card-background-end: #1f1e2c;
-      --border-color: #2f2e3f;
-      --text-color: #e5e7eb;
-      --label-color: #9ca0af;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Duolingo XP Leaderboard</title>
+    <link
+      rel="icon"
+      href="https://design.duolingo.com/86230c9ad10d9f08b785.svg"
+      type="image/svg+xml"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@700&family=Open+Sans:wght@400;600&family=Source+Code+Pro:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/odometer@0.4.8/themes/odometer-theme-default.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --feather-green: rgb(88, 204, 2);
+        --mask-green: rgb(137, 226, 25);
+        --eel: rgb(75, 75, 75);
+        --snow: rgb(255, 255, 255);
+        --dark-background: #1b1a24;
+        --card-background-start: #252434;
+        --card-background-end: #1f1e2c;
+        --border-color: #2f2e3f;
+        --text-color: #e5e7eb;
+        --label-color: #9ca0af;
+      }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    html,
-    body {
-      height: 100%;
-      font-family: "Open Sans", sans-serif;
-      color: var(--text-color);
-    }
+      html,
+      body {
+        height: 100%;
+        font-family: 'Open Sans', sans-serif;
+        color: var(--text-color);
+      }
 
-    body {
-      background-color: var(--dark-background);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      line-height: 1.6;
-      padding: 20px;
-    }
+      body {
+        background-color: var(--dark-background);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        line-height: 1.6;
+        padding: 20px;
+      }
 
-    header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
+      header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
 
-    header h1 {
-      font-family: "Nunito Sans", sans-serif;
-      font-size: 2.5rem;
-      letter-spacing: -0.5px;
-      margin-bottom: 10px;
-      color: var(--mask-green);
-    }
-
-    .counters-container {
-      width: 100%;
-      max-width: 1100px;
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-    }
-
-    .row {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 30px;
-    }
-
-    .counter-card {
-      background: linear-gradient(
-        135deg,
-        var(--card-background-start),
-        var(--card-background-end)
-      );
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-      padding: 20px;
-      text-align: center;
-      flex: 1 1 300px;
-      min-width: 280px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .label {
-      font-size: 1rem;
-      font-weight: 600;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-      color: var(--label-color);
-    }
-
-    .counter {
-      font-family: "Source Code Pro", monospace;
-      font-size: 2.5rem;
-      font-weight: 700;
-      line-height: 1.1;
-    }
-
-    .xp-total {
-      color: var(--feather-green);
-    }
-
-    .xp-goal {
-      color: var(--mask-green);
-    }
-
-    .progress-bar-container {
-      width: 100%;
-      background-color: var(--border-color);
-      border-radius: 10px;
-      height: 20px;
-      overflow: hidden;
-      position: relative; 
-    }
-
-    .progress-bar {
-      height: 100%;
-      background-color: var(--feather-green);
-      width: 0%;
-      transition: width 0.4s ease-in-out;
-      position: relative;
-    }
-
-    .progress-bar-text {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: var(--dark-background);
-      font-size: 0.8rem;
-      font-weight: bold;
-    }
-
-    .leaderboard-container {
-      width: 100%;
-      overflow-x: auto;
-    }
-
-    .leaderboard-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      background-color: var(--card-background-start);
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    }
-
-    .leaderboard-table th,
-    .leaderboard-table td {
-      padding: 10px 10px;
-      text-align: left;
-      border-bottom: 1px solid var(--border-color);
-      font-size: 0.85rem;
-    }
-
-    .leaderboard-table th {
-      background-color: var(--border-color);
-      color: var(--label-color);
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-
-    .leaderboard-table tbody tr:nth-child(odd) {
-      background-color: var(--card-background-end);
-    }
-
-    .sources {
-      font-size: 0.8rem;
-      color: var(--label-color);
-      text-align: center;
-      margin-top: 40px;
-      margin-bottom: 20px;
-      line-height: 1.4;
-      max-width: 600px;
-    }
-
-    .sources a {
-      color: inherit;
-      text-decoration: none;
-      border-bottom: 1px dotted var(--label-color);
-      transition: color 0.3s ease, border-bottom-color 0.3s ease;
-    }
-
-    .sources a:hover {
-      color: var(--text-color);
-      border-bottom-color: var(--text-color);
-    }
-
-    #lastUpdated {
-      display: block;
-      margin-bottom: 40px;
-    }
-
-    .goal-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .goal-subtext {
-      font-size: 0.85rem;
-      color: var(--label-color);
-      margin-top: 5px;
-    }
-
-    #totalXpChartContainer {
-      width: 100%;
-      max-width: 1100px;
-      margin: 20px auto;
-      background: linear-gradient(
-        135deg,
-        var(--card-background-start),
-        var(--card-background-end)
-      );
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-      padding: 10px; 
-    }
-
-    @media (max-width: 600px) {
       header h1 {
-        font-size: 2rem;
+        font-family: 'Nunito Sans', sans-serif;
+        font-size: 2.5rem;
+        letter-spacing: -0.5px;
+        margin-bottom: 10px;
+        color: var(--mask-green);
       }
 
-      .counter {
-        font-size: 2rem;
+      .counters-container {
+        width: 100%;
+        max-width: 1100px;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
       }
 
-      .label {
-        font-size: 0.8rem;
+      .row {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 30px;
       }
 
       .counter-card {
-        padding: 15px;
+        background: linear-gradient(
+          135deg,
+          var(--card-background-start),
+          var(--card-background-end)
+        );
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        padding: 20px;
+        text-align: center;
+        flex: 1 1 300px;
+        min-width: 280px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
       }
-    }
-  </style>
-</head>
 
-<body>
-  <header>
-    <h1>Duolingo XP Leaderboard</h1>
-  </header>
+      .counter-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      }
 
-  <div class="counters-container">
-    <div class="row">
-      <div class="counter-card">
-        <div class="label">Total XP</div>
-        <div id="totalXpCounter" class="counter xp-total odometer">0</div>
-      </div>
-      <div class="counter-card">
-        <div class="label">Goal Remaining</div>
-        <div class="goal-container">
-          <div id="xpGoalCounter" class="counter xp-goal odometer">
-            50,000,000,000
+      .label {
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        color: var(--label-color);
+      }
+
+      .counter {
+        font-family: 'Source Code Pro', monospace;
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1.1;
+      }
+
+      .xp-total {
+        color: var(--feather-green);
+      }
+
+      .xp-goal {
+        color: var(--mask-green);
+      }
+
+      .progress-bar-container {
+        width: 100%;
+        background-color: var(--border-color);
+        border-radius: 10px;
+        height: 20px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .progress-bar {
+        height: 100%;
+        background-color: var(--feather-green);
+        width: 0%;
+        transition: width 0.4s ease-in-out;
+        position: relative;
+      }
+
+      .progress-bar-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: var(--dark-background);
+        font-size: 0.8rem;
+        font-weight: bold;
+      }
+
+      .leaderboard-container {
+        width: 100%;
+        overflow-x: auto;
+      }
+
+      .leaderboard-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        background-color: var(--card-background-start);
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .leaderboard-table th,
+      .leaderboard-table td {
+        padding: 10px 10px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+        font-size: 0.85rem;
+      }
+
+      .leaderboard-table th {
+        background-color: var(--border-color);
+        color: var(--label-color);
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .leaderboard-table tbody tr:nth-child(odd) {
+        background-color: var(--card-background-end);
+      }
+
+      .sources {
+        font-size: 0.8rem;
+        color: var(--label-color);
+        text-align: center;
+        margin-top: 40px;
+        margin-bottom: 20px;
+        line-height: 1.4;
+        max-width: 600px;
+      }
+
+      .sources a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px dotted var(--label-color);
+        transition: color 0.3s ease, border-bottom-color 0.3s ease;
+      }
+
+      .sources a:hover {
+        color: var(--text-color);
+        border-bottom-color: var(--text-color);
+      }
+
+      #lastUpdated {
+        display: block;
+        margin-bottom: 40px;
+      }
+
+      .goal-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .goal-subtext {
+        font-size: 0.85rem;
+        color: var(--label-color);
+        margin-top: 5px;
+      }
+
+      #totalXpChartContainer {
+        width: 100%;
+        max-width: 1100px;
+        margin: 20px auto;
+        background: linear-gradient(
+          135deg,
+          var(--card-background-start),
+          var(--card-background-end)
+        );
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        padding: 10px;
+      }
+
+      @media (max-width: 600px) {
+        header h1 {
+          font-size: 2rem;
+        }
+
+        .counter {
+          font-size: 2rem;
+        }
+
+        .label {
+          font-size: 0.8rem;
+        }
+
+        .counter-card {
+          padding: 15px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>Duolingo XP Leaderboard</h1>
+    </header>
+
+    <div class="counters-container">
+      <div class="row">
+        <div class="counter-card">
+          <div class="label">Total XP</div>
+          <div id="totalXpCounter" class="counter xp-total odometer">0</div>
+        </div>
+        <div class="counter-card">
+          <div class="label">Goal Remaining</div>
+          <div class="goal-container">
+            <div id="xpGoalCounter" class="counter xp-goal odometer">
+              50,000,000,000
+            </div>
+            <div class="goal-subtext">Target: 50,000,000,000</div>
           </div>
-          <div class="goal-subtext">Target: 50,000,000,000</div>
         </div>
       </div>
-    </div>
 
-    <div class="progress-bar-container">
-      <div class="progress-bar" id="xpProgressBar">
-        <span class="progress-bar-text" id="xpPercentage">0%</span>
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="xpProgressBar">
+          <span class="progress-bar-text" id="xpPercentage">0%</span>
+        </div>
+      </div>
+
+      <div id="totalXpChartContainer"></div>
+
+      <div class="leaderboard-container">
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Country</th>
+              <th>Gained XP (Total)</th>
+              <th>Gained XP (Last Minute)</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody"></tbody>
+        </table>
       </div>
     </div>
 
-    <div id="totalXpChartContainer"></div>
-
-    <div class="leaderboard-container">
-      <table class="leaderboard-table">
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Country</th>
-            <th>Gained XP (Total)</th>
-            <th>Gained XP (Last Minute)</th>
-          </tr>
-        </thead>
-        <tbody id="leaderboardBody"></tbody>
-      </table>
+    <div class="sources">
+      <strong>Data source:</strong>
+      <a
+        href="https://lang-challenge-api-prod.duolingo.com/dead-duo-leaderboard"
+        target="_blank"
+        >Duolingo Leaderboard API</a
+      >
+      <br /><br />
+      <span id="lastUpdated"><strong>Last updated:</strong> Not available</span>
     </div>
-  </div>
 
-  <div class="sources">
-    <strong>Data source:</strong>
-    <a
-      href="https://lang-challenge-api-prod.duolingo.com/dead-duo-leaderboard"
-      target="_blank"
-      >Duolingo Leaderboard API</a
-    >
-    <br /><br />
-    <span id="lastUpdated"><strong>Last updated:</strong> Not available</span>
-  </div>
+    <script src="https://cdn.jsdelivr.net/npm/odometer@0.4.8/odometer.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script>
+      const leaderboardBodyEl = document.getElementById('leaderboardBody');
+      const totalXpCounterEl = document.getElementById('totalXpCounter');
+      const xpGoalCounterEl = document.getElementById('xpGoalCounter');
+      const xpProgressBarEl = document.getElementById('xpProgressBar');
+      const lastUpdatedEl = document.getElementById('lastUpdated');
+      const totalXpChartContainerEl = document.getElementById(
+        'totalXpChartContainer'
+      );
+      const xpPercentageEl = document.getElementById('xpPercentage');
 
-  <script src="https://cdn.jsdelivr.net/npm/odometer@0.4.8/odometer.min.js"></script>
-  <script src="https://code.highcharts.com/highcharts.js"></script>
-  <script>
-    const leaderboardBodyEl = document.getElementById("leaderboardBody");
-    const totalXpCounterEl = document.getElementById("totalXpCounter");
-    const xpGoalCounterEl = document.getElementById("xpGoalCounter");
-    const xpProgressBarEl = document.getElementById("xpProgressBar");
-    const lastUpdatedEl = document.getElementById("lastUpdated");
-    const totalXpChartContainerEl = document.getElementById(
-      "totalXpChartContainer"
-    );
-    const xpPercentageEl = document.getElementById("xpPercentage");
+      const xpGoal = 50000000000;
+      let currentTotalXp = 0;
+      let chart;
+      const maxChartPoints = 9000;
 
-    const xpGoal = 50000000000;
-    let currentTotalXp = 0;
-    let chart; 
-    const maxChartPoints = 9000; 
+      function formatLocalTime() {
+        const now = new Date();
+        return now.toLocaleString(undefined, {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        });
+      }
 
-    function formatLocalTime() {
-      const now = new Date();
-      return now.toLocaleString(undefined, {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-      });
-    }
-
-    async function fetchLeaderboardData() {
-      try {
-        const response = await fetch(
-          "https://cors.stats100.xyz/https://lang-challenge-api-prod.duolingo.com/dead-duo-leaderboard"
-        );
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+      async function fetchLeaderboardData() {
+        try {
+          const response = await fetch(
+            'https://cors.stats100.xyz/https://lang-challenge-api-prod.duolingo.com/dead-duo-leaderboard'
+          );
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          return data;
+        } catch (error) {
+          console.error('Error fetching leaderboard data:', error);
+          leaderboardBodyEl.innerHTML =
+            "<tr><td colspan='4'>Failed to load leaderboard data.</td></tr>";
+          return null;
         }
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        console.error("Error fetching leaderboard data:", error);
-        leaderboardBodyEl.innerHTML =
-          "<tr><td colspan='4'>Failed to load leaderboard data.</td></tr>";
-        return null;
-      }
-    }
-
-    function updateLeaderboard(leaderboardData) {
-      if (!leaderboardData || !leaderboardData.leaderboard) {
-        leaderboardBodyEl.innerHTML =
-          "<tr><td colspan='4'>No leaderboard data available.</td></tr>";
-        return;
       }
 
-      let leaderboardHTML = "";
-      leaderboardData.leaderboard.forEach((item) => {
-        leaderboardHTML += `
+      function updateLeaderboard(leaderboardData) {
+        if (!leaderboardData || !leaderboardData.leaderboard) {
+          leaderboardBodyEl.innerHTML =
+            "<tr><td colspan='4'>No leaderboard data available.</td></tr>";
+          return;
+        }
+
+        let leaderboardHTML = '';
+        leaderboardData.leaderboard.forEach(item => {
+          leaderboardHTML += `
             <tr>
               <td>${item.rank}</td>
               <td>${item.name}</td>
@@ -377,123 +402,154 @@
               <td>${item.gainedXpLast60.toLocaleString()}</td>
             </tr>
           `;
-      });
-      leaderboardBodyEl.innerHTML = leaderboardHTML;
-
-      const newTotalXp = leaderboardData.currentXp;
-      if (newTotalXp !== currentTotalXp) {
-        const odometer = new Odometer({
-          el: totalXpCounterEl,
-          value: currentTotalXp,
-          format: ",ddd",
-          theme: "default",
-          duration: 2000 
         });
-        odometer.update(newTotalXp);
-        currentTotalXp = newTotalXp;
+        leaderboardBodyEl.innerHTML = leaderboardHTML;
 
-        addChartPoint(new Date().getTime(), newTotalXp);
+        const newTotalXp = leaderboardData.currentXp;
+        if (newTotalXp !== currentTotalXp) {
+          const odometer = new Odometer({
+            el: totalXpCounterEl,
+            value: currentTotalXp,
+            format: ',ddd',
+            theme: 'default',
+            duration: 2000,
+          });
+          odometer.update(newTotalXp);
+          currentTotalXp = newTotalXp;
+
+          addChartPoint(new Date().getTime(), newTotalXp);
+        }
+
+        const remainingXp = xpGoal - leaderboardData.currentXp;
+        const odometerGoal = new Odometer({
+          el: xpGoalCounterEl,
+          value: parseInt(xpGoalCounterEl.textContent.replace(/,/g, '')),
+          format: ',ddd',
+          theme: 'default',
+        });
+        odometerGoal.update(remainingXp);
+
+        const progress = Math.min(
+          (leaderboardData.currentXp / xpGoal) * 100,
+          100
+        );
+        xpProgressBarEl.style.width = `${progress}%`;
+        xpPercentageEl.textContent = `${progress.toFixed(2)}%`;
       }
 
-      const remainingXp = xpGoal - leaderboardData.currentXp;
-      const odometerGoal = new Odometer({
-        el: xpGoalCounterEl,
-        value: parseInt(xpGoalCounterEl.textContent.replace(/,/g, "")),
-        format: ",ddd",
-        theme: "default",
-      });
-      odometerGoal.update(remainingXp);
-
-      const progress = Math.min(
-        (leaderboardData.currentXp / xpGoal) * 100,
-        100
-      );
-      xpProgressBarEl.style.width = `${progress}%`;
-      xpPercentageEl.textContent = `${progress.toFixed(2)}%`; 
-    }
-
-    function initializeChart() {
-      chart = Highcharts.chart("totalXpChartContainer", {
-        chart: {
-          type: "spline",
-          backgroundColor: "transparent",
-        },
-        title: {
-          text: "Total XP",
-          style: {
-            color: "#e5e7eb",
+      function initializeChart() {
+        chart = Highcharts.chart('totalXpChartContainer', {
+          chart: {
+            type: 'spline',
+            backgroundColor: 'transparent',
           },
-        },
-        xAxis: {
-          type: "datetime",
           title: {
-            text: "Time",
+            text: 'Total XP',
             style: {
-              color: "#9ca0af",
+              color: '#e5e7eb',
             },
           },
-          labels: {
+          xAxis: {
+            type: 'datetime',
+            title: {
+              text: 'Time',
+              style: {
+                color: '#9ca0af',
+              },
+            },
+            labels: {
+              style: {
+                color: '#9ca0af',
+              },
+            },
+          },
+          yAxis: {
+            title: {
+              text: 'Total XP',
+              style: {
+                color: '#9ca0af',
+              },
+            },
+            labels: {
+              style: {
+                color: '#9ca0af',
+              },
+            },
+            gridLineColor: '#2f2e3f',
+            gridLineWidth: 1,
+            gridLineDashStyle: 'Solid',
+          },
+          tooltip: {
+            useHTML: true,
+            backgroundColor: 'rgba(30, 30, 30, 0.85)',
+            borderRadius: 6,
+            borderColor: '#58cc02',
+            padding: 6,
             style: {
-              color: "#9ca0af",
+              color: '#e5e7eb',
+              fontSize: '12px',
+            },
+            formatter: function () {
+              return `
+      <div style="
+        font-family: Arial, sans-serif;
+        padding: 4px;
+        border-radius: 4px;
+        line-height: 1.4;
+      ">
+        <div style="font-weight: bold; color: #58cc02;">
+          ${this.series.name}
+        </div>
+        <div style="color: #9ca0af;">
+          ${Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x)}
+        </div>
+        <div style="font-weight: bold; color: #58cc02;">
+          XP: ${this.y.toLocaleString()}
+        </div>
+      </div>`;
             },
           },
-        },
-        yAxis: {
-          title: {
-            text: "Total XP",
-            style: {
-              color: "#9ca0af",
+          legend: {
+            enabled: false,
+          },
+          plotOptions: {
+            spline: {
+              marker: {
+                enabled: false,
+              },
             },
           },
-          labels: {
-            style: {
-              color: "#9ca0af",
+          series: [
+            {
+              name: 'Total XP',
+              data: [],
+              color: '#58cc02',
             },
+          ],
+          credits: {
+            enabled: false,
           },
-          gridLineColor: "#2f2e3f", 
-          gridLineWidth: 1,
-          gridLineDashStyle: "Solid",
-        },
-        legend: {
-          enabled: false,
-        },
-        plotOptions: {
-          spline: {
-            marker: {
-              enabled: false,
-            },
-          },
-        },
-        series: [
-          {
-            name: "Total XP",
-            data: [], 
-            color: "#58cc02",
-          },
-        ],
-        credits: {
-          enabled: false,
-        },
-      });
-    }
-
-    function addChartPoint(x, y) {
-      if (chart) {
-        const series = chart.series[0];
-        series.addPoint([x, y], true, series.data.length > maxChartPoints);
+        });
       }
-    }
 
-    async function updateData() {
-      const leaderboardData = await fetchLeaderboardData();
-      if (leaderboardData) {
-        updateLeaderboard(leaderboardData);
+      function addChartPoint(x, y) {
+        if (chart) {
+          const series = chart.series[0];
+          series.addPoint([x, y], true, series.data.length > maxChartPoints);
+        }
       }
-      lastUpdatedEl.innerHTML = `<strong>Last updated:</strong> ${formatLocalTime()}`;
-    }
 
-    initializeChart();
-    updateData();
-    setInterval(updateData, 2500);
-  </script>
-</body>
+      async function updateData() {
+        const leaderboardData = await fetchLeaderboardData();
+        if (leaderboardData) {
+          updateLeaderboard(leaderboardData);
+        }
+        lastUpdatedEl.innerHTML = `<strong>Last updated:</strong> ${formatLocalTime()}`;
+      }
+
+      initializeChart();
+      updateData();
+      setInterval(updateData, 2500);
+    </script>
+  </body>
+</head>
