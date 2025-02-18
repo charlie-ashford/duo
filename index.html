@@ -98,10 +98,6 @@
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .counter-card:hover {
-      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
-    }
-
     .label {
       font-size: 1rem;
       font-weight: 600;
@@ -391,6 +387,7 @@
           value: currentTotalXp,
           format: ",ddd",
           theme: "default",
+          duration: 1200 
         });
         odometer.update(newTotalXp);
         currentTotalXp = newTotalXp;
