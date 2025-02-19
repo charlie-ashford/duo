@@ -434,9 +434,11 @@
 
       function formatLocalTime() {
         const now = new Date();
-        const userLocale = Intl.DateTimeFormat().resolvedOptions().locale; 
+        const userLocales = navigator.languages || [navigator.language];
+        console.log("navigator.language:", navigator.language); 
+        console.log("navigator.languages:", navigator.languages); 
 
-        return now.toLocaleString(userLocale, {
+        return new Date().toLocaleString(userLocales, {
           year: 'numeric',
           month: 'long',
           day: 'numeric',
