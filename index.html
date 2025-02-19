@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@700&family=Open+Sans:wght@400;600&family=Source+Code+Pro:wght@700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@700&family=Open+Sans:wght@400;600&family=Inter:wght@700&display=swap"
     rel="stylesheet"
   />
   <link
@@ -19,7 +19,7 @@
   />
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=width, initial-scale=1.0" />
     <title>Duolingo XP Leaderboard</title>
     <link
       rel="icon"
@@ -86,6 +86,21 @@
         color: var(--mask-green);
       }
 
+      .odometer.odometer-auto-theme,
+      .odometer.odometer-theme-default {
+        font-family: 'Inter', sans-serif !important;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+      }
+
+      .odometer.odometer-auto-theme .odometer-digit,
+      .odometer.odometer-theme-default .odometer-digit {
+        border-radius: 0;
+        padding: 0;
+        background: transparent;
+        box-shadow: none;
+      }
+
       .counters-container {
         width: 100%;
         max-width: 1100px;
@@ -127,7 +142,7 @@
       }
 
       .counter {
-        font-family: 'Source Code Pro', monospace;
+        font-family: 'Inter', sans-serif;
         font-size: 2.5rem;
         font-weight: 700;
         line-height: 1.1;
@@ -272,6 +287,58 @@
           padding: 15px;
         }
       }
+
+      .gain-info-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 30px;
+        width: 100%;
+        max-width: 1100px;
+        margin: 20px auto;
+      }
+
+      .gain-info-card {
+        background: linear-gradient(
+          135deg,
+          var(--card-background-start),
+          var(--card-background-end)
+        );
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        padding: 20px;
+        text-align: center;
+        flex: 1 1 300px;
+        min-width: 280px;
+      }
+
+      .gain-info-label {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--label-color);
+        margin-bottom: 5px;
+        text-transform: uppercase;
+      }
+
+      .gain-info-value {
+        font-family: 'Inter', sans-serif !important;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--feather-green);
+      }
+
+      .gain-info-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .gain-info-label {
+        letter-spacing: 0.5px;
+      }
+
+      .gain-info-value {
+        letter-spacing: -0.5px;
+      }
     </style>
   </head>
 
@@ -300,6 +367,19 @@
       <div class="progress-bar-container">
         <div class="progress-bar" id="xpProgressBar">
           <span class="progress-bar-text" id="xpPercentage">0%</span>
+        </div>
+      </div>
+
+      <div class="gain-info-container">
+        <div class="gain-info-card">
+          <div class="gain-info-label">Total XP Gained (Last Hour)</div>
+          <div id="xpPerHour" class="counter gain-info-value">0</div>
+        </div>
+        <div class="gain-info-card">
+          <div class="gain-info-label">Estimated Time to Reach Goal</div>
+          <div id="estimatedTime" class="counter gain-info-value">
+            Calculating...
+          </div>
         </div>
       </div>
 
@@ -343,6 +423,8 @@
         'totalXpChartContainer'
       );
       const xpPercentageEl = document.getElementById('xpPercentage');
+      const xpPerHourEl = document.getElementById('xpPerHour');
+      const estimatedTimeEl = document.getElementById('estimatedTime');
 
       const xpGoal = 50000000000;
       let currentTotalXp = 0;
@@ -429,6 +511,37 @@
         );
         xpProgressBarEl.style.width = `${progress}%`;
         xpPercentageEl.textContent = `${progress.toFixed(2)}%`;
+
+        const totalXpLastHour = leaderboardData.leaderboard.reduce(
+          (sum, item) => sum + item.gainedXpLast60,
+          0
+        );
+
+        const xpPerHour = totalXpLastHour * 60;
+        const odometerXpPerHour = new Odometer({
+          el: xpPerHourEl,
+          value: parseInt(xpPerHourEl.textContent.replace(/,/g, '')),
+          format: ',ddd',
+          theme: 'default',
+        });
+        odometerXpPerHour.update(xpPerHour);
+
+        estimateTimeToGoal(remainingXp, xpPerHour);
+      }
+
+      function estimateTimeToGoal(remainingXp, xpPerHour) {
+        if (xpPerHour <= 0) {
+          estimatedTimeEl.textContent = 'N/A (Gaining no XP)';
+          return;
+        }
+
+        const hoursNeeded = remainingXp / xpPerHour;
+        const now = new Date();
+        const estimatedCompletionTime = new Date(
+          now.getTime() + hoursNeeded * 60 * 60 * 1000
+        );
+
+        estimatedTimeEl.textContent = estimatedCompletionTime.toLocaleString();
       }
 
       function initializeChart() {
